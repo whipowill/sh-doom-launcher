@@ -75,3 +75,4 @@ Do you want to run this command? (y/n): n
 ## External Links
 
 - [GZDOOM](https://github.com/ZDoom/gzdoom/releases)
+- [ZDL](https://forum.zdoom.org/viewtopic.php?t=76814) - a launcher for Windows w/ a UI
