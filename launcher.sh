@@ -101,7 +101,7 @@ if [ "$network_choice" != "y" ] || [ "$host_join" != "j" ]; then
 
         # Scan PWADs directory for the selected IWAD
         pwad_dir="PWADs/$(basename "${selected_iwad%.*}")"
-        echo "CUSTOM CAMPAIGN: (third-party)"
+        echo "CUSTOM CAMPAIGN:"
         echo "-----------------"
         list_files "$pwad_dir" pwads
 

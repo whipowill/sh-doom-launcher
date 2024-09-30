@@ -4,7 +4,7 @@ A shell script for launching GZDOOM w/ mods in Terminal.
 
 ## Install
 
-Copy and paste this ``launcher.sh`` file and add to your ``~/.bashrc`` file as an alias:
+Save this ``launcher.sh`` file and add to your ``~/.bashrc`` file as an alias:
 
 ```
 alias doom="sh /path/to/doom/launcher.sh"
@@ -12,7 +12,7 @@ alias doom="sh /path/to/doom/launcher.sh"
 
 ## Usage
 
-The script assumes that it resides in a directory of WAD and MOD files.  The layout of those folders is important:
+The script assumes that it resides in a directory of WAD and MOD files.  The structure of those folders is important:
 
 ```
 launcher.sh
@@ -50,7 +50,7 @@ BASE GAME:
 7) TNT.WAD
 Select an IWAD (enter number): 3
 
-CUSTOM CAMPAIGN: (third-party)
+CUSTOM CAMPAIGN:
 -----------------
 1) DoomTheWayIdDid.wad
 2) NoEndInSight.wad
