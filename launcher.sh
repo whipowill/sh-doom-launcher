@@ -64,11 +64,14 @@ if [ "$network_choice" = "y" ]; then
         read -p "Enter the episode number: " episode_num
         read -p "Enter the mission number: " mission_num
         read -p "Enter the skill level (1-5): " skill_num
-
-        echo ""
+        read -p "Allow cheats? (y/n): " cheat_choice
 
         # Prepare command for hosting
         command+=" -host $player_num -warp $episode_num $mission_num -skill $skill_num"
+
+        if [ "$cheat_choice" = "y" ]; then
+            command+=" +set sv_cheats 1"
+        fi
 
     elif [ "$host_join" = "j" ]; then
         read -p "Enter the IP address to join: " ip_address
@@ -82,16 +85,20 @@ if [ "$network_choice" = "y" ]; then
         echo "Invalid option. Exiting."
         exit 1
     fi
+
 fi
 
 if [ "$network_choice" != "y" ] || [ "$host_join" != "j" ]; then
+
+    echo ""
+
     # Scan IWADs directory
     echo "BASE GAME:"
     echo "-----------"
-    list_files "IWADs" iwads
+    list_files "IWAD" iwads
 
     # Get user input for IWAD selection
-    read -p "Select an IWAD (enter number): " iwad_choice
+    read -p "Select a base game (enter number): " iwad_choice
 
     # Validate IWAD selection
     if [[ "$iwad_choice" =~ ^[0-9]+$ ]] && [ "$iwad_choice" -gt 0 ] && [ "$iwad_choice" -le "${#iwads[@]}" ]; then
@@ -100,37 +107,18 @@ if [ "$network_choice" != "y" ] || [ "$host_join" != "j" ]; then
         echo ""
 
         # Scan PWADs directory for the selected IWAD
-        pwad_dir="PWADs/$(basename "${selected_iwad%.*}")"
-        echo "CUSTOM CAMPAIGN:"
+        pwad_dir="PWAD/$(basename "${selected_iwad%.*}")"
+        echo "COMPATIBLE MODS:"
         echo "-----------------"
         list_files "$pwad_dir" pwads
 
         # Get user input for PWAD selection
-        read -p "Select a PWAD (enter number): " pwad_choice
+        read -p "Select mods (enter numbers separated by spaces, order matters): " -a pwad_choices
 
-        # Validate PWAD selection
-        if [[ "$pwad_choice" =~ ^[0-9]+$ ]] && [ "$pwad_choice" -gt 0 ] && [ "$pwad_choice" -le "${#pwads[@]}" ]; then
-            selected_pwad="${pwads[pwad_choice-1]}"
-        else
-            selected_pwad=""
-            echo "No valid PWAD selected."
-        fi
-
-        echo ""
-
-        # Scan MODs directory for available mods
-        echo "MODIFICATIONS:"
-        echo "---------------"
-        list_files "MODs" mods
-
-        # Get user input for MOD selection (multiple selections allowed)
-        read -p "Select MODs (enter numbers separated by spaces, order matters): " -a mod_choices
-
-        selected_mods=()
-
-        for choice in "${mod_choices[@]}"; do
-            if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -gt 0 ] && [ "$choice" -le "${#mods[@]}" ]; then
-                selected_mods+=("${mods[choice-1]}")
+        selected_pwads=()
+        for choice in "${pwad_choices[@]}"; do
+            if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -gt 0 ] && [ "$choice" -le "${#pwads[@]}" ]; then
+                selected_pwads+=("${pwads[choice-1]}")
             fi
         done
 
@@ -140,16 +128,11 @@ if [ "$network_choice" != "y" ] || [ "$host_join" != "j" ]; then
         command+=" -iwad \"$selected_iwad\""
 
         # If a PWAD or a mod...
-        if [ -n "$selected_pwad" ] || [ ${#selected_mods[@]} -gt 0 ]; then
+        if [ ${#selected_pwads[@]} -gt 0 ]; then
             command+=" -file"
 
-            # Add the selected PWAD if valid.
-            if [ -n "$selected_pwad" ]; then
-                command+=" \"$selected_pwad\""
-            fi
-
-            # Add the selected mods.
-            for mod in "${selected_mods[@]}"; do
+            # Add the selected pwads.
+            for mod in "${selected_pwads[@]}"; do
                 command+=" \"$mod\""
             done
         fi
@@ -158,6 +141,14 @@ if [ "$network_choice" != "y" ] || [ "$host_join" != "j" ]; then
         exit 1
     fi
 fi
+
+# Ask about item respawns
+read -p "Do you want items to respawn? (y/n): " respawn_choice
+if [ "$respawn_choice" = "y" ]; then
+    command+=" +dmflags 16384 +dmflags2 134217728"
+fi
+
+echo ""
 
 # Print final command.
 echo "COMMAND:"

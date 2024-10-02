@@ -12,15 +12,16 @@ alias doom="sh /path/to/doom/launcher.sh"
 
 ## Usage
 
-The script assumes that it resides in a directory of WAD and MOD files.  The structure of those folders is important:
+The script assumes that it resides in a directory of IWAD and PWAD files.  The structure of those folders is important:
 
 ```
 launcher.sh
-IWADs/ <-- put your DOOM wad files in here, like DOOM.WAD, DOOM2.WAD
-PWADs/ <-- put your custom campaign wad files in here, nested by associated IWAD
-    DOOM/ <-- DOOM campaigns
-    DOOM2/ <-- DOOM2 campaigns
-MODs/ <-- put any other mod files, like BrutalDoom, in here
+IWADs/ <-- base game files here, like ``DOOM.WAD``, ``DOOM2.WAD``
+PWADs/
+    DOOM/
+        <DOOM mods go here>
+    DOOM2/
+        <DOOM2 mods go here>
 ```
 
 The script will prompt you as it progressively builds the final command line instruction to launch the game.
